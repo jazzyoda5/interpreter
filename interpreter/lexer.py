@@ -25,7 +25,8 @@ symbols = {
     # Single equal is used for assignment
     '==': 'ISEQUAL',
     '>=': 'GRTHEQ',
-    '<=': 'SMTHEQ'
+    '<=': 'SMTHEQ',
+    ',': 'COMMA'
 }
 
 # Other token types
@@ -108,7 +109,6 @@ class Lexer(object):
 
     # Returns tokens one by one
     def get_next_token(self):
-        print('char: ', self.current_char)
         # Check for end of file
         if self.pos > len(self.text) - 1:
             return Token('EOF', None)
@@ -154,8 +154,7 @@ class Lexer(object):
             return Token(symbol, char)
 
         # Check for integers
-        if self.current_char.isdigit():
-            print('jakob1')
+        if self.current_char.isdigit(): 
             token = self.integer()
             print(token)
             return token

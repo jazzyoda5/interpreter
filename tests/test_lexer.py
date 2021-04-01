@@ -346,3 +346,259 @@ def test_lexer_bool_decl():
     assert isinstance(next_token, Token)
     assert next_token.type == 'EOF'
     assert next_token.value == None
+
+
+#######################################
+# Function declaration
+#######################################
+
+def test_lexer_langdecl1():
+    text = """
+        function some_function() {
+            print('Hello');
+            return();
+        }
+    """
+    lexer = Lexer(text)
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'FUNCDECL'
+    assert next_token.value == 'function'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'NAME'
+    assert next_token.value == 'some_function'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LBRACE'
+    assert next_token.value == '{'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'PRINT'
+    assert next_token.value == 'print'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'STRING'
+    assert next_token.value == 'Hello'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'SCOLON'
+    assert next_token.value == ';'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RETURN'
+    assert next_token.value == 'return'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'SCOLON'
+    assert next_token.value == ';'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RBRACE'
+    assert next_token.value == '}'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'EOF'
+    assert next_token.value == None
+
+#########################################
+# If Else
+#########################################
+
+def test_lexer_langdecl1():
+    text = """
+        if (a > 68) {
+            print(a);
+        } else {
+            print(68);
+        }
+    """
+    lexer = Lexer(text)
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'IF'
+    assert next_token.value == 'if'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'NAME'
+    assert next_token.value == 'a'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'GRTHAN'
+    assert next_token.value == '>'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'INTEGER'
+    assert next_token.value == 68
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LBRACE'
+    assert next_token.value == '{'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'PRINT'
+    assert next_token.value == 'print'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'NAME'
+    assert next_token.value == 'a'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'SCOLON'
+    assert next_token.value == ';'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RBRACE'
+    assert next_token.value == '}'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'ELSE'
+    assert next_token.value == 'else'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LBRACE'
+    assert next_token.value == '{'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'PRINT'
+    assert next_token.value == 'print'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'LPAREN'
+    assert next_token.value == '('
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'INTEGER'
+    assert next_token.value == 68
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RPAREN'
+    assert next_token.value == ')'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'SCOLON'
+    assert next_token.value == ';'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'RBRACE'
+    assert next_token.value == '}'
+
+    next_token = lexer.get_next_token()
+    assert next_token is not None
+    assert isinstance(next_token, Token)
+    assert next_token.type == 'EOF'
+    assert next_token.value == None
