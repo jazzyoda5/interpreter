@@ -29,6 +29,7 @@ class Parser(object):
         self.curr_token = lexer.get_next_token()
 
     def error(self):
+        print('Token at error: ', self.curr_token)
         raise Exception('ParserError: Invalid syntax')
 
     def eat(self, token_type):
@@ -66,6 +67,8 @@ class Parser(object):
             statements.append(statement)
             if isinstance(statement, IfStatement) or isinstance(statement, FuncDecl):
                 pass
+            elif self.curr_token.type == 'RETURN':
+                break
             elif self.curr_token.type != 'SCOLON':
                 break
             else:
@@ -162,6 +165,72 @@ class Parser(object):
         return node
 
     #######################################
+    # FUNCTION DECLARATIONS
+    #######################################
+    
+    def functiondecl(self):
+        """ FUNCDECL variable LPAREN (parameter (COMMA parameter)*) RPARNEN LBRACE block (RETURN RPAREN (parameter) LPAREN) RBRACE """
+        self.eat('FUNCDECL')
+        name = self.variable()
+        self.eat('LPAREN')
+        
+        params = []
+        while True:
+            if self.curr_token.type == 'NAME':
+                var_node = Var(token=self.curr_token)
+                self.eat('NAME')
+                self.eat('COLON')    
+                # Next token should be specifying the type of the param
+                type_node = self.curr_token
+                param = Param(var_node=var_node, type_node=type_node)
+                params.append(param)
+                self.eat('TYPE')
+
+            if self.curr_token.type == 'COMMA':
+                self.eat('COMMA')
+            elif self.curr_token.type == 'RPAREN':
+                break
+        
+        self.eat('RPAREN')
+
+        # Block
+        self.eat('LBRACE')
+        block = self.block()
+        return_params = None
+ 
+        # Check for returns
+        if self.curr_token.type == 'RETURN':
+            self.eat('RETURN') 
+            self.eat('LPAREN')
+            
+            return_params = []
+            while True:
+                token = self.curr_token
+                if token.type == 'BOOL':
+                    return_params.append(Boolean(token=token))
+                    self.eat('BOOL')
+                elif token.type == 'STRING':
+                    return_params.append(String(token=token))
+                    self.eat('STRING')
+                else:
+                    return_params.append(self.expr())
+
+                if self.curr_token.type == 'COMMA':
+                    self.eat('COMMA')
+                    continue
+                elif self.curr_token.type == 'RPAREN':
+                    self.eat('RPAREN')
+                    self.eat('SCOLON')
+                    break
+                else:
+                    self.error() 
+            
+        self.eat('RBRACE')    
+        node = FuncDecl(func_name=name, params=params, block_node=block, returns=return_params)
+        return node
+                            
+ 
+    #######################################
     # IF ELSE  
     #######################################
 
@@ -212,9 +281,9 @@ class Parser(object):
         elif token.type == 'ISEQUAL':
             op = token
             self.eat('ISEQUAL')
-        elif token.type == 'LSTHEQ':
+        elif token.type == 'SMTHEQ':
             op = token
-            self.eat('LSTHEQ')
+            self.eat('SMTHEQ')
         elif token.type == 'GRTHEQ':
             op = token
             self.eat('GRTHEQ')
