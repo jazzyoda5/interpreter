@@ -1,5 +1,4 @@
 from .ast import ( 
-    Float,
     Print,
     BinOp,
     Block,
@@ -13,6 +12,7 @@ from .ast import (
     IfStatement,
     Param,
     FuncDecl,
+    FuncCall,
     Empty
 )
 
@@ -84,9 +84,12 @@ class Parser(object):
 
         token = self.curr_token
         print(token)
-        if token.type == 'NAME':  # Could be function call(?)
+        if (token.type == 'NAME' and
+            self.lexer.current_char == '('
+        ):  
+            node = self.functioncall()
+        elif token.type == 'NAME':
             node = self.assignment()
-
         elif token.type == 'PRINT':
             node = self.print()
             
@@ -119,10 +122,6 @@ class Parser(object):
         elif token.type == 'INTEGER':
             node = Number(token=token)
             self.eat('INTEGER')
-
-        elif token.type == 'FLOAT':
-            node = Float(token=token)
-            self.eat('FLOAT')
 
         elif token.type == 'LPAREN':
             self.eat('LPAREN')
@@ -165,7 +164,7 @@ class Parser(object):
         return node
 
     #######################################
-    # FUNCTION DECLARATIONS
+    # FUNCTIONS
     #######################################
     
     def functiondecl(self):
@@ -228,11 +227,48 @@ class Parser(object):
         self.eat('RBRACE')    
         node = FuncDecl(func_name=name, params=params, block_node=block, returns=return_params)
         return node
-                            
- 
+        
+    def functioncall(self):
+        token = self.curr_token
+        name = token.value
+        self.eat('NAME')
+        self.eat('LPAREN')
+        params = []
+        if self.curr_token.type != 'RPAREN':
+            while True:
+                if self.curr_token.type == 'STRING':
+                    node = String(token=self.curr_token)
+                    params.append(node)
+                    self.eat('STRING')
+                elif self.curr_token.type == 'BOOL':
+                    node = Boolean(token=self.curr_token)
+                    params.append(node)
+                    self.eat('BOOL')              
+                else:
+                    node = self.expr()
+                    params.append(node)
+                
+                if self.curr_token.type == 'COMMA':
+                    self.eat('COMMA')
+                    continue
+                elif self.curr_token.type == 'RPAREN':
+                    break
+                else:
+                    self.error()
+
+        self.eat('RPAREN')
+        node = FuncCall(
+            func_name=name,
+            params=params,
+            token=token
+        )
+        return node
+
+
     #######################################
     # IF ELSE  
     #######################################
+
 
     def ifelse(self):
         """ ifelse  :  IF comparison LBRACE block RBRACE (ELSE LBRACE block RBRACE) """        

@@ -1,6 +1,5 @@
 import pytest
 from interpreter.ast import (
-    Float,
     Print,
     BinOp,
     Block,
@@ -14,6 +13,7 @@ from interpreter.ast import (
     IfStatement,
     Param,
     FuncDecl,
+    FuncCall,
     Empty
 )
 from interpreter.lexer import Lexer, Token
@@ -172,26 +172,6 @@ def test_parser_bool_assign():
     
     node3 = node2.value
     assert node3.value == True
-
-
-def test_parser_float_assign():
-    text = 'variable: float = 1.2;'
-    lexer = Lexer(text)
-    parser = Parser(lexer)
-    node1 = parser.parse()
-
-    assert isinstance(node1, Block)
-    assert len(node1.children) == 2 
-
-    node2 = node1.children[0]
-    assert isinstance(node2, Assign)
-    assert isinstance(node2.name, Var)
-    assert node2.type.type == 'TYPE' # TYPE Token as type
-    assert node2.type.value == 'float'
-    assert isinstance(node2.value, Float)
-    
-    node3 = node2.value
-    assert node3.value == 1.2
 
 
 def test_parser_if_true():
@@ -367,3 +347,39 @@ def test_parser_func_decl3():
     # Return BinOp
     assert isinstance(func_decl.returns[0], BinOp)
 
+
+def test_parser_function_call1():
+    text = """
+        some_function();
+    """
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    block = parser.parse()
+    func_call = block.children[0]
+    assert isinstance(func_call, FuncCall)
+    assert func_call.params == []
+    assert func_call.func_name == 'some_function'
+    assert func_call.token.value == 'some_function'
+
+
+def test_parser_function_call_with_params():
+    text = """
+        some_function(12 + 4, 'string', 78);
+    """
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    block = parser.parse()
+    func_call = block.children[0]
+    assert isinstance(func_call, FuncCall)
+    assert len(func_call.params) == 3
+    assert func_call.func_name == 'some_function'
+    assert func_call.token.value == 'some_function'
+    
+    first_param = func_call.params[0]
+    assert isinstance(first_param, BinOp)
+
+    second_param = func_call.params[1]
+    assert isinstance(second_param, String)
+
+    third_param = func_call.params[2]
+    assert isinstance(third_param, Number)

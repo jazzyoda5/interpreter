@@ -31,12 +31,6 @@ class String(AST):
         self.token = token
 
 
-class Float(AST):
-    def __init__(self, token):
-        self.value = token.value
-        self.token = token
-
-
 class BinOp(AST):
     def __init__(self, left, op, right):
         self.left = left
@@ -106,5 +100,10 @@ class FuncDecl(AST):
         self.returns = returns
 
 
+class FuncCall(AST):
+    def __init__(self, func_name, params, token):
+        self.func_name = func_name
+        self.params = params
+        self.token = token
 class Empty(AST):
     pass
