@@ -141,7 +141,7 @@ def test_parser_str_assign():
     node1 = parser.parse()
 
     assert isinstance(node1, Block)
-    assert len(node1.children) == 1 
+    assert len(node1.children) == 2 
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
@@ -161,7 +161,7 @@ def test_parser_bool_assign():
     node1 = parser.parse()
 
     assert isinstance(node1, Block)
-    assert len(node1.children) == 1 
+    assert len(node1.children) == 2 
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
@@ -237,6 +237,24 @@ def test_parser_statement_after_if():
     assert isinstance(assgn_node, Assign)
 
 
+def test_parser_statement_before_if():
+    text = """  
+        a: str = "hey";
+        if (a == 2) {
+            print('yes');
+        }
+    """
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    main_block = parser.parse()
+    
+    assign_node = main_block.children[0]
+    assert isinstance(assign_node, Assign)
+
+    if_node = main_block.children[1]
+    assert isinstance(if_node, IfStatement)
+
+
 def test_parser_if_comparison2():
     text = """
         if (a <= 2) {
@@ -271,7 +289,7 @@ def test_parser_func_decl1():
     assert isinstance(func_decl, FuncDecl)
 
     # Params
-    params = func_decl.params
+    params = func_decl.formal_params
     assert isinstance(params, list)
     assert len(params) == 1
     first_param = params[0]
@@ -283,8 +301,6 @@ def test_parser_func_decl1():
     func_block = func_decl.block_node
     assert isinstance(func_block, Block)
     
-    # No return
-    assert func_decl.returns is None
 
 def test_parser_func_decl2():
     text = """
@@ -300,7 +316,7 @@ def test_parser_func_decl2():
     assert isinstance(func_decl, FuncDecl)
 
     # Params
-    params = func_decl.params
+    params = func_decl.formal_params
     assert isinstance(params, list)
     assert len(params) == 1
     first_param = params[0]
@@ -312,8 +328,6 @@ def test_parser_func_decl2():
     func_block = func_decl.block_node
     assert isinstance(func_block, Block)
     
-    # Return Variable
-    assert isinstance(func_decl.returns[0], Var)
 
 def test_parser_func_decl3():
     text = """
@@ -328,7 +342,7 @@ def test_parser_func_decl3():
     assert isinstance(func_decl, FuncDecl)
 
     # Params
-    params = func_decl.params
+    params = func_decl.formal_params
     assert isinstance(params, list)
     assert len(params) == 2
     first_param = params[0]
@@ -344,8 +358,6 @@ def test_parser_func_decl3():
     func_block = func_decl.block_node
     assert isinstance(func_block, Block)
     
-    # Return BinOp
-    assert isinstance(func_decl.returns[0], BinOp)
 
 
 def test_parser_function_call1():
@@ -383,3 +395,25 @@ def test_parser_function_call_with_params():
 
     third_param = func_call.params[2]
     assert isinstance(third_param, Number)
+
+
+def test_parser_nested_func_call():
+    text = """
+    function some_function(a: int) {
+        b: int = a + 1;
+        return (b);
+    }    
+    print(some_function(2));
+    """
+    lexer = Lexer(text)
+    parser = Parser(lexer)
+    block = parser.parse()
+    func_decl = block.children[0]
+    assert isinstance(func_decl, FuncDecl)
+    assert len(func_decl.formal_params) == 1
+    assert func_decl.func_name.value == 'some_function'
+    
+    print_statement = block.children[1]
+    assert isinstance(print_statement, Print)
+
+

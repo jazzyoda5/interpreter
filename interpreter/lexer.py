@@ -156,7 +156,6 @@ class Lexer(object):
         # Check for integers
         if self.current_char.isdigit(): 
             token = self.integer()
-            print(token)
             return token
 
         # Check for names -> including built-in names

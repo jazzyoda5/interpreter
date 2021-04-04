@@ -1,7 +1,12 @@
 from lexer import Lexer
 
 def main():
-    text = 'print("Hello World", 4);'
+    text = """
+        a: str = 'hey';
+        if (a == 2) {
+            print(a); 
+        }
+    """  
     lexer_check = Lexer(text)
     while True:
         token = lexer_check.get_next_token()

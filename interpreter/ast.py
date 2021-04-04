@@ -95,7 +95,7 @@ class Param(AST):
 class FuncDecl(AST):
     def __init__(self, func_name, params, block_node, returns=None):
         self.func_name = func_name
-        self.params = params # This is a list of parameter nodes
+        self.formal_params = params # This is a list of parameter nodes
         self.block_node = block_node
         self.returns = returns
 
@@ -105,5 +105,11 @@ class FuncCall(AST):
         self.func_name = func_name
         self.params = params
         self.token = token
+        self.scope_level = None
+
 class Empty(AST):
     pass
+
+class Returns(AST):
+    def __init__(self, returns):
+        self.returns = returns

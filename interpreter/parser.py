@@ -13,7 +13,8 @@ from .ast import (
     Param,
     FuncDecl,
     FuncCall,
-    Empty
+    Empty,
+    Returns
 )
 
 #######################################
@@ -66,14 +67,12 @@ class Parser(object):
             statement = self.statement()
             statements.append(statement)
             if isinstance(statement, IfStatement) or isinstance(statement, FuncDecl):
-                pass
-            elif self.curr_token.type == 'RETURN':
-                break
+                continue
             elif self.curr_token.type != 'SCOLON':
                 break
             else:
                 self.eat('SCOLON')
-
+        
         return statements
 
     def statement(self):
@@ -83,7 +82,6 @@ class Parser(object):
                           | empty """
 
         token = self.curr_token
-        print(token)
         if (token.type == 'NAME' and
             self.lexer.current_char == '('
         ):  
@@ -92,7 +90,8 @@ class Parser(object):
             node = self.assignment()
         elif token.type == 'PRINT':
             node = self.print()
-            
+        elif token.type == 'RETURN':
+            node = self.returns()
         elif token.type == 'IF':
             node = self.ifelse()
 
@@ -127,6 +126,11 @@ class Parser(object):
             self.eat('LPAREN')
             node = self.expr()
             self.eat('RPAREN')
+
+        elif (token.type == 'NAME' and
+            self.lexer.current_char == '('
+        ):  
+            node = self.functioncall()
 
         elif token.type == 'NAME':
             node = self.variable()
@@ -211,6 +215,10 @@ class Parser(object):
                 elif token.type == 'STRING':
                     return_params.append(String(token=token))
                     self.eat('STRING')
+                elif (token.type == 'NAME' and
+                    self.lexer.current_char == '('
+                ):  
+                    return_params.append(self.functioncall())
                 else:
                     return_params.append(self.expr())
 
@@ -264,6 +272,43 @@ class Parser(object):
         )
         return node
 
+    def returns(self):
+        return_params = None
+ 
+        # Check for returns
+        if self.curr_token.type == 'RETURN':
+            self.eat('RETURN') 
+            self.eat('LPAREN')
+            
+            return_params = []
+            while True:
+                token = self.curr_token
+                if token.type == 'BOOL':
+                    return_params.append(Boolean(token=token))
+                    self.eat('BOOL')
+                elif token.type == 'STRING':
+                    return_params.append(String(token=token))
+                    self.eat('STRING')
+                elif (token.type == 'NAME' and
+                    self.lexer.current_char == '('
+                ):  
+                    return_params.append(self.functioncall())
+                else:
+                    return_params.append(self.expr())
+
+                if self.curr_token.type == 'COMMA':
+                    self.eat('COMMA')
+                    continue
+                elif self.curr_token.type == 'RPAREN':
+                    self.eat('RPAREN')
+                    self.eat('SCOLON')
+                    break
+                else:
+                    self.error() 
+
+        node = Returns(returns=return_params)
+        return node
+
 
     #######################################
     # IF ELSE  
@@ -303,7 +348,6 @@ class Parser(object):
         
         if self.curr_token.type == 'RPAREN':
             self.eat('RPAREN')
-            print('jakob234')
             return Comparison(left=left)
         
         # Check for comparison operator
@@ -324,7 +368,6 @@ class Parser(object):
             op = token
             self.eat('GRTHEQ')
         else:
-            print('token at comparison error: ', token)
             self.error()
 
         # Right side of comparison
@@ -342,7 +385,7 @@ class Parser(object):
         return Var(token=token)
     
     def print(self):
-        """ PRINT  LPAREN (expr | STRING | BOOL (COMMA))* RPAREN """
+        """ PRINT  LPAREN (expr | STRING | BOOL | functioncall (COMMA))* RPAREN """
         self.eat('PRINT')
         self.eat('LPAREN')
         
@@ -350,13 +393,16 @@ class Parser(object):
 
         while True:
             token = self.curr_token
-            print('token at print: ', token)
             if token.type == 'STRING':
                 node.args.append(String(token=token))
                 self.eat('STRING')
             elif token.type == 'BOOL':
                 node.args.append(Boolean(token=token))
                 self.eat('BOOL')
+            elif (token.type == 'NAME' and
+                self.lexer.current_char == '('
+            ):  
+                node.args.append(self.functioncall())
             else:
                 node.args.append(self.expr()) # Arithmetic expression
 
@@ -379,9 +425,11 @@ class Parser(object):
         
         if self.curr_token.type == 'STRING':
             value = String(token=self.curr_token)
+            self.eat('STRING')
 
         elif self.curr_token.type == 'BOOL':
             value = Boolean(token=self.curr_token)
+            self.eat('BOOL')
         else:
             value = self.expr()
 
