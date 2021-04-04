@@ -182,3 +182,6 @@ def test_sem_an_bad_funccall2(tree):
         result = analyser.analyse()
     
     assert "was expecting" in str(excinfo)
+
+
+    

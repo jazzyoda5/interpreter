@@ -82,13 +82,6 @@ class Interpreter(NodeVisitor):
         self.call_stack = None
     
     def interpret(self):
-        try:
-            self.visit(self.tree)
-            return 'success'
-        except Exception as exc:
-            raise exc
-
-    def visit_Block(self, node):
         if self.call_stack is None: # Create a global scope
             self.call_stack = CallStack()
             ar = ActivationRecord(
@@ -98,28 +91,46 @@ class Interpreter(NodeVisitor):
             )
             self.call_stack.push(ar)
 
+        try:
+            self.visit(self.tree)
+            self.call_stack.pop()
+            return 'success'
+        except Exception as exc:
+            raise exc
+        
+
+    def visit_Block(self, node):
         for child in node.children:
             self.visit(child)
 
-        curr_ar = self.call_stack.peek()
-        if curr_ar.name == 'global':
-            self.call_stack.pop()
-
     def visit_BinOp(self, node):
-        if isinstance(type(self.visit(node.left)), bool) or isinstance(type(self.visit(node.right)), bool):
-            raise Exception("Error: Can not run {} operation on types {} {}".format(
-                 node.op.value, node.left.value, node.right.value
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        if (isinstance(type(left), bool) or isinstance(type(right), bool)) or (
+            type(left) != type(right)
+        ):
+            raise Exception("Error: Can not run {} operation on types {} and {}".format(
+                    node.op.value, type(left).__name__, type(right).__name__
             ))
+
+        if (type(left).__name__ != 'int' or type(right).__name__ != 'int') and (
+            node.op.value in ('*', '/') # Mult and Div only with numbers
+        ):  
+            raise Exception("Error: Can not run {} operation on types {} and {}".format(
+                    node.op.value, type(left).__name__, type(right).__name__
+            ))
+
         if node.op.value == '+':
-            return self.visit(node.left) + self.visit(node.right)
+            return left + right
         elif node.op.value == '-':
-            return self.visit(node.left) - self.visit(node.right)
+            return left - right
         elif node.op.value == '/':
-            return self.visit(node.left) / self.visit(node.right)
+            return left / right
         elif node.op.value == '*':
-            return self.visit(node.left) * self.visit(node.right)
+            return left * right
     
     def visit_FuncDecl(self, node):
+        # Already handled in semantic analyser
         pass 
 
     def visit_FuncCall(self, node):
@@ -153,7 +164,7 @@ class Interpreter(NodeVisitor):
         self.call_stack.pop()
         return returns
 
-        
+
     def visit_Returns(self, node):
         ar = self.call_stack.peek()
 

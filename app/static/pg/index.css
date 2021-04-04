@@ -1,0 +1,106 @@
+body {
+    background-color: rgb(191, 195, 186);
+    text-align: center;
+}
+nav {
+    width: 100vw;
+    background-color: rgb(72, 51, 82);
+}
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    justify-content: space-between;
+    padding: 1rem;
+    color: rgb(230, 230, 230);
+    margin-bottom: 1rem;
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links .btn {
+    margin-right: 1rem;
+    color: rgb(230, 230, 230);
+    background-color: rgb(53, 39, 59); 
+}
+
+.nav-links .btn:hover {
+    background-color: rgb(87, 69, 95) ;
+    color:  rgb(203, 255, 187);
+}
+
+textarea {
+    resize: none;
+}
+
+.main-input-div {
+    margin: auto;
+    width: 100vw;
+    height: 100vh;
+    max-width: 800px;
+    max-height: 400px;
+    background-color: rgb(96, 83, 102); 
+    border-color:rgb(101, 98, 126);
+}
+.main-input {
+    width: 100%;
+    height: 100%;
+    font-family: Hack, monospace;
+    color: white;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0);
+    border-color:rgb(101, 98, 126);
+    outline: none;
+}
+
+.main-input:focus {
+    outline: none;
+} 
+
+.input-nav {
+    display: flex;
+    margin: auto;
+    width: 100vw;
+    max-width: 800px;
+    background-color: rgb(81, 69, 87);
+    align-items: center;
+    justify-content: center;
+    text-align: right;
+    border-color:rgb(21, 20, 29);
+}
+
+.input-nav .btn {
+    background-color: rgb(50, 44, 53);
+    margin-right: 10px;
+    height: 100% !important;
+    padding: 0;
+    margin: 0.5rem;
+}
+.run {
+    color: rgb(83, 231, 90); 
+}
+.clear-output {
+    color: rgb(209, 209, 209); 
+}
+.output-div {
+    background-color: rgb(81, 69, 87);
+    max-width: 800px;
+    margin: auto;
+    color: rgb(255, 255, 255);
+    text-align: left;
+    border-color:rgb(21, 20, 29);
+}
+.output-div p {
+    margin-left: 0.5rem;
+    padding-top: 0.5rem;
+}
+.output {
+    margin-top: 0;
+    width: 100vw;
+    max-width: 800px;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    outline: none;
+}
