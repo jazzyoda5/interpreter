@@ -8,7 +8,7 @@ from interpreter.ast import (
     String,
     Boolean,
     Comparison,
-    Var,
+    Variable,
     UnaryOp,
     Assign,
     IfStatement,

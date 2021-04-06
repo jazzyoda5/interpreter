@@ -1,6 +1,6 @@
 from semantic_analyser import (
     BuiltinTypeSymbol,
-    VarSymbol,
+    VariableSymbol,
     FunctionSymbol,
     SymbolTable,
     Symbol
@@ -194,7 +194,7 @@ class Interpreter(NodeVisitor):
             if node.elseblock is not None:
                 self.visit(node.elseblock)
         
-    def visit_Var(self, node):
+    def visit_Variable(self, node):
         var_name = node.value
         ar = self.call_stack.peek()
         var_value = ar.get(var_name)

@@ -60,13 +60,6 @@ class Assign(AST):
         self.type = type
         self.value = value
 
-
-class Var(AST):
-    def __init__(self, token):
-        self.token = token
-        self.value = token.value
-
-
 class Value(AST):
     # Something that has only a value
     # Like a boolean or a string
@@ -113,3 +106,8 @@ class Empty(AST):
 class Returns(AST):
     def __init__(self, returns):
         self.returns = returns
+
+class Variable(AST):
+    def __init__(self, token):
+        self.value = token.value
+        self.token = token

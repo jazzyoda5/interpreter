@@ -7,7 +7,7 @@ from interpreter.ast import (
     String,
     Boolean,
     Comparison,
-    Var,
+    Variable,
     UnaryOp,
     Assign,
     IfStatement,
@@ -98,7 +98,7 @@ def test_parser_int_assign():
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
-    assert isinstance(node2.name, Var)
+    assert isinstance(node2.name, Variable)
     assert node2.type.type == 'TYPE' # TYPE Token as type
     assert node2.type.value == 'int'
     assert isinstance(node2.value, Number)
@@ -118,7 +118,7 @@ def test_parser_expr_assign():
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
-    assert isinstance(node2.name, Var)
+    assert isinstance(node2.name, Variable)
     assert node2.type.type == 'TYPE' # TYPE Token as type
     assert node2.type.value == 'int'
     assert isinstance(node2.value, BinOp)
@@ -145,7 +145,7 @@ def test_parser_str_assign():
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
-    assert isinstance(node2.name, Var)
+    assert isinstance(node2.name, Variable)
     assert node2.type.type == 'TYPE' # TYPE Token as type
     assert node2.type.value == 'str'
     assert isinstance(node2.value, String)
@@ -165,7 +165,7 @@ def test_parser_bool_assign():
 
     node2 = node1.children[0]
     assert isinstance(node2, Assign)
-    assert isinstance(node2.name, Var)
+    assert isinstance(node2.name, Variable)
     assert node2.type.type == 'TYPE' # TYPE Token as type
     assert node2.type.value == 'bool'
     assert isinstance(node2.value, Boolean)
@@ -215,7 +215,7 @@ def test_parser_if_comparison():
     assert if_node.elseblock is None
 
     comp_node = if_node.value
-    assert isinstance(comp_node.left, Var)
+    assert isinstance(comp_node.left, Variable)
     assert comp_node.op.value == '>'
     assert isinstance(comp_node.right, Number)
 
@@ -271,7 +271,7 @@ def test_parser_if_comparison2():
     assert if_node.elseblock is None
 
     comp_node = if_node.value
-    assert isinstance(comp_node.left, Var)
+    assert isinstance(comp_node.left, Variable)
     assert comp_node.op.value == '<='
     assert isinstance(comp_node.right, Number)
 

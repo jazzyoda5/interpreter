@@ -1,7 +1,8 @@
 import inspect
+
 from interpreter.ast import (
     BinOp,
-    Var
+    Variable
 )
 
 ###############################
@@ -30,9 +31,9 @@ class BuiltinTypeSymbol(Symbol):
         )
 
 
-class VarSymbol(Symbol):
+class VariableSymbol(Symbol):
     def __init__(self, name, type): # type == BuilinTypeSymbol instance
-        super(VarSymbol, self).__init__(name, type)
+        super(VariableSymbol, self).__init__(name, type)
 
     def __str__(self): # For nice printing
         return "<{class_name}(name='{name}', type='{type}')>".format(
@@ -136,7 +137,6 @@ class SemanticAnalyzer(NodeVisitor):
             value_type = 'int'
 
         var_type = var_type.value
-        print(value_type, ' == ', var_type)
         if value_type == var_type:
             return True
         return False        
@@ -178,7 +178,7 @@ class SemanticAnalyzer(NodeVisitor):
         for param in node.formal_params:
             param_type = self.current_scope.lookup(param.type_node.value)
             param_name = param.var_node.value
-            var_symbol = VarSymbol(param_name, param_type)
+            var_symbol = VariableSymbol(param_name, param_type)
             self.current_scope.insert(var_symbol)
             func_symbol.formal_params.append(var_symbol)
 
@@ -205,7 +205,7 @@ class SemanticAnalyzer(NodeVisitor):
             ))
         
         for actual_param, formal_param in zip(node.params, func_symbol.formal_params):
-            if isinstance(actual_param, Var):
+            if isinstance(actual_param, Variable):
                 self.visit(actual_param)
                 continue
             elif isinstance(actual_param, BinOp) and formal_param.type.name != 'int':
@@ -222,7 +222,7 @@ class SemanticAnalyzer(NodeVisitor):
         type_name = node.type.value
         type_symbol = self.current_scope.lookup(type_name)
         var_name = node.name.value
-        var_symbol = VarSymbol(var_name, type_symbol)
+        var_symbol = VariableSymbol(var_name, type_symbol)
 
         if self.current_scope.lookup(var_name, current_scope_only=True): # Check for duplicate symbols
             raise Exception(
@@ -231,7 +231,7 @@ class SemanticAnalyzer(NodeVisitor):
 
         if not self.check_for_correct_type(node.type, node.value):
             raise Exception(
-                'TypeError: Variable {var} is not of type {type}'.format(var=var_name, type=type_name)      
+                'TypeError: Variableiable {var} is not of type {type}'.format(var=var_name, type=type_name)      
             )
 
         self.current_scope.insert(var_symbol)
@@ -242,7 +242,7 @@ class SemanticAnalyzer(NodeVisitor):
         for node in returns:
             self.visit(node)
 
-    def visit_Var(self, node):
+    def visit_Variable(self, node):
         var_name = node.value
         var_symbol = self.current_scope.lookup(var_name)
         if var_symbol is None:

@@ -1,5 +1,7 @@
 from flask import Flask
-from playground import pg
+from views import pg
+
+
 app = Flask(__name__)
 app.register_blueprint(pg)
 

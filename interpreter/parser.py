@@ -6,7 +6,7 @@ from .ast import (
     String,
     Boolean,
     Comparison,
-    Var,
+    Variable,
     UnaryOp,
     Assign,
     IfStatement,
@@ -30,7 +30,6 @@ class Parser(object):
         self.curr_token = lexer.get_next_token()
 
     def error(self):
-        print('Token at error: ', self.curr_token)
         raise Exception('ParserError: Invalid syntax')
 
     def eat(self, token_type):
@@ -38,7 +37,6 @@ class Parser(object):
         if self.curr_token.type == token_type:
             self.curr_token = self.lexer.get_next_token()
         else:
-            print('token on error: ', self.curr_token)
             self.error()
 
     def parse(self):
@@ -180,7 +178,7 @@ class Parser(object):
         params = []
         while True:
             if self.curr_token.type == 'NAME':
-                var_node = Var(token=self.curr_token)
+                var_node = Variable(token=self.curr_token)
                 self.eat('NAME')
                 self.eat('COLON')    
                 # Next token should be specifying the type of the param
@@ -224,7 +222,6 @@ class Parser(object):
 
                 if self.curr_token.type == 'COMMA':
                     self.eat('COMMA')
-                    continue
                 elif self.curr_token.type == 'RPAREN':
                     self.eat('RPAREN')
                     self.eat('SCOLON')
@@ -258,7 +255,6 @@ class Parser(object):
                 
                 if self.curr_token.type == 'COMMA':
                     self.eat('COMMA')
-                    continue
                 elif self.curr_token.type == 'RPAREN':
                     break
                 else:
@@ -298,7 +294,6 @@ class Parser(object):
 
                 if self.curr_token.type == 'COMMA':
                     self.eat('COMMA')
-                    continue
                 elif self.curr_token.type == 'RPAREN':
                     self.eat('RPAREN')
                     self.eat('SCOLON')
@@ -382,7 +377,7 @@ class Parser(object):
     def variable(self):
         token = self.curr_token
         self.eat('NAME')
-        return Var(token=token)
+        return Variable(token=token)
     
     def print(self):
         """ PRINT  LPAREN (expr | STRING | BOOL | functioncall (COMMA))* RPAREN """
