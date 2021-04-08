@@ -36,5 +36,4 @@ Reading grammar {
     - | means or
     - Anything in () is optional
     - If statement has * appended to it, it means it can repeat multiple timesince
-    - CAPS terms are end nodes and lowercase terms are upper nodes
 }

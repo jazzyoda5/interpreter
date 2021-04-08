@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link
+href="{{ url_for('static', filename='pg/docs.css') }}"
+rel="stylesheet"
+/>
+{% endblock %} 
+
+{% block title %}Docs{% endblock %}
+{% block content %}
+<div class="docs-body">
+    <h1><strong>About Tranescript</strong></h1>
+    <hr>
+    <p>
+        Tranescript is a multi purpose scripting language. The goal of the creator was to get recognition from ladies around the world, so for some reason he decided that building an interpreter was the way to go. Using Tranescript in your production environment is not recommended, unless you want to sabotage the company you work for, in which case it is probably your best choice.
+    </p>
+    <hr>
+    <br>
+    <h2>Usage</h2>
+    <br>
+    <ul>
+        <li>
+            <h4>Built In Types</h4>
+            <p>Tranescript supports three built in data types.<br>
+
+                <mark>Integer</mark> - <mark>int</mark><br>
+                <mark>String</mark> - <mark>str</mark><br>
+                <mark>Boolean</mark> - <mark>bool</mark><br>
+            </p>
+        </li>
+        <li>
+            <h4>print(args*)</h4>
+            <p>The <mark>print()</mark> function prints the given arguments to the standard output device.</p>
+        </li>
+    </ul>
+</div>
+{% endblock %}

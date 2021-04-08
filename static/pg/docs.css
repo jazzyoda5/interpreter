@@ -1,0 +1,13 @@
+.docs-body {
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    background-color: antiquewhite;
+    text-align: left;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+mark {
+    background-color: gold;
+}

@@ -130,7 +130,6 @@ class SemanticAnalyzer(NodeVisitor):
     
     @staticmethod
     def check_for_correct_type(var_type, var_value):
-         # Because it is an AST NODE
         try:
             value_type = type(var_value.value).__name__
         except AttributeError:

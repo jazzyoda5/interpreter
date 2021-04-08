@@ -602,3 +602,18 @@ def test_lexer_langdecl1():
     assert isinstance(next_token, Token)
     assert next_token.type == 'EOF'
     assert next_token.value == None
+
+
+def test_lexer_comments():
+    text = """
+        /*
+        I am a comment
+        */
+        a: int = 1;
+    """
+    lexer = Lexer(text)
+
+    token = lexer.get_next_token()
+    assert isinstance(token, Token)
+    assert token.type == 'NAME'
+    assert token.value == 'a'

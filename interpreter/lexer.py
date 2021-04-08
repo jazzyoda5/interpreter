@@ -32,7 +32,7 @@ symbols = {
 # Other token types
 other_types = {
     'name': 'NAME',
-    # Represents a bool value not 
+    # Represents a bool value not
     # a type declaration of boolean
     'bool': 'BOOL',
     'id': 'ID',
@@ -70,8 +70,8 @@ class Token(object):
         return self.__str__()
 
 
-# Lexer reads the text file and generates a stream 
-# of tokens as they follow one another that we can than 
+# Lexer reads the text file and generates a stream
+# of tokens as they follow one another that we can than
 # feed to the parser
 class Lexer(object):
     def __init__(self, text):
@@ -107,6 +107,17 @@ class Lexer(object):
             if not self.current_char.isspace():
                 break
 
+    def comment(self):
+        while True:
+            if self.current_char == '*' and self.peek() == '/':
+                for _ in range(2):
+                    self.advance()
+                break
+            self.advance()
+
+        if self.current_char.isspace():
+            self.skip_whitespace()
+
     # Returns tokens one by one
     def get_next_token(self):
         # Check for end of file
@@ -117,10 +128,20 @@ class Lexer(object):
         if self.current_char.isspace():
             self.skip_whitespace()
 
-            # Check for EOF otherwise there is an error if you leave 
+            # Check for EOF otherwise there is an error if you leave
             # empty lines at the end of the file
             if self.current_char == None and self.pos > len(self.text) - 1:
                 return Token('EOF', None)
+
+        if self.current_char == '/':
+            next_char = self.peek()
+            if next_char == '*':
+                for _ in range(2):
+                    self.advance()
+                self.comment()
+
+                if self.current_char == None and self.pos > len(self.text) - 1:
+                    return Token('EOF', None)
 
         # First check for symbols
         symbol = symbols.get(self.current_char)
@@ -134,7 +155,7 @@ class Lexer(object):
                     for _ in range(2):
                         self.advance()
                     return Token('ISEQUAL', '==')
-            
+
             if char == '>':
                 next_char = self.peek()
                 if next_char == '=':
@@ -142,7 +163,6 @@ class Lexer(object):
                         self.advance()
                     return Token('GRTHEQ', '>=')
 
-            
             if char == '<':
                 next_char = self.peek()
                 if next_char == '=':
@@ -150,11 +170,21 @@ class Lexer(object):
                         self.advance()
                     return Token('SMTHEQ', '<=')
 
+            if char == '/':
+                next_char = self.peek()
+                if next_char == '*':
+
+                    for _ in range(2):
+                        self.advance()
+                    self.comment()
+                    if self.current_char == None and self.pos > len(self.text) - 1:
+                        return Token('EOF', None)
+
             self.advance()
             return Token(symbol, char)
 
         # Check for integers
-        if self.current_char.isdigit(): 
+        if self.current_char.isdigit():
             token = self.integer()
             return token
 
@@ -182,15 +212,15 @@ class Lexer(object):
                 if not char.isdigit() and not char == '.':
                     break
                 int_string += char
-                if char == '.': # Check for float
-                    is_float = True 
+                if char == '.':  # Check for float
+                    is_float = True
                 self.advance()
 
                 # Handle EOF
                 if self.current_char is None:
                     break
-        
-        if is_float:               
+
+        if is_float:
             int_value = float(int_string)
             return Token('FLOAT', int_value)
         else:

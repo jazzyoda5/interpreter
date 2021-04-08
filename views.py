@@ -22,6 +22,10 @@ def index():
     return render_template('pg/index.html')
 
 
+@pg.route('/about')
+def about():
+    return render_template('pg/docs.html')
+
 # Api
 
 
