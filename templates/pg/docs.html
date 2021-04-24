@@ -1,132 +1,20 @@
-Last login: Sat Apr 24 21:09:37 on console
+{% extends 'base.html' %}
+{% block styles %}
+<link
+href="{{ url_for('static', filename='pg/docs.css') }}"
+rel="stylesheet"
+/>
+{% endblock %} 
 
-The default interactive shell is now zsh.
-To update your account to use zsh, please run `chsh -s /bin/zsh`.
-For more details, please visit https://support.apple.com/kb/HT208050.
-(base) jakobs-MacBook-Pro-3:~ macbook$ ssh root@142.93.131.222
-root@142.93.131.222's password: 
-Permission denied, please try again.
-root@142.93.131.222's password: 
-Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-66-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Apr 24 20:28:20 UTC 2021
-
-  System load:  0.0                Users logged in:       0
-  Usage of /:   28.1% of 24.06GB   IPv4 address for eth0: 142.93.131.222
-  Memory usage: 59%                IPv4 address for eth0: 10.18.0.5
-  Swap usage:   0%                 IPv4 address for eth1: 10.110.0.2
-  Processes:    119
-
-42 updates can be installed immediately.
-0 of these updates are security updates.
-To see these additional updates run: apt list --upgradable
-
-
-*** System restart required ***
-Last login: Sun Mar  7 14:03:21 2021 from 213.127.117.219
-root@hang1:~# sudo reboot
-root@hang1:~# Connection to 142.93.131.222 closed by remote host.
-Connection to 142.93.131.222 closed.
-(base) jakobs-MacBook-Pro-3:~ macbook$ ssh root@142.93.131.222
-root@142.93.131.222's password: 
-Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-72-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
- System information disabled due to load higher than 1.0
-
-42 updates can be installed immediately.
-0 of these updates are security updates.
-To see these additional updates run: apt list --upgradable
-
-
-Last login: Sat Apr 24 20:28:21 2021 from 213.127.117.58
-root@hang1:~# cd /var/www
-root@hang1:/var/www# ls
-chess  hang  hang-new  html  venv
-root@hang1:/var/www# mkdir tranescript
-root@hang1:/var/www# ls
-chess  hang  hang-new  html  tranescript  venv
-root@hang1:/var/www# exit
-logout
-Connection to 142.93.131.222 closed.
-(base) jakobs-MacBook-Pro-3:~ macbook$ ssh root@178.62.251.206
-root@178.62.251.206's password: 
-Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-70-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Apr 24 20:30:48 UTC 2021
-
-  System load:  0.0                Users logged in:       0
-  Usage of /:   11.7% of 24.06GB   IPv4 address for eth0: 178.62.251.206
-  Memory usage: 30%                IPv4 address for eth0: 10.18.0.6
-  Swap usage:   0%                 IPv4 address for eth1: 10.110.0.3
-  Processes:    110
-
-83 updates can be installed immediately.
-0 of these updates are security updates.
-To see these additional updates run: apt list --upgradable
-
-
-*** System restart required ***
-Last login: Fri Apr  9 11:15:17 2021 from 213.127.118.23
-root@tranescript1:~# sudo reboot
-root@tranescript1:~# Connection to 178.62.251.206 closed by remote host.
-Connection to 178.62.251.206 closed.
-(base) jakobs-MacBook-Pro-3:~ macbook$ ssh root@178.62.251.206
-root@178.62.251.206's password: 
-Permission denied, please try again.
-root@178.62.251.206's password: 
-Permission denied, please try again.
-root@178.62.251.206's password: 
-root@178.62.251.206: Permission denied (publickey,password).
-(base) jakobs-MacBook-Pro-3:~ macbook$ ssh root@178.62.251.206
-root@178.62.251.206's password: 
-Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-72-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sat Apr 24 20:33:01 UTC 2021
-
-  System load:  0.28               Users logged in:       0
-  Usage of /:   11.7% of 24.06GB   IPv4 address for eth0: 178.62.251.206
-  Memory usage: 23%                IPv4 address for eth0: 10.18.0.6
-  Swap usage:   0%                 IPv4 address for eth1: 10.110.0.3
-  Processes:    121
-
-83 updates can be installed immediately.
-0 of these updates are security updates.
-To see these additional updates run: apt list --upgradable
-
-
-Last login: Sat Apr 24 20:30:50 2021 from 213.127.117.58
-root@tranescript1:~# cd /var/www
-root@tranescript1:/var/www# ls
-html  interpreter  sample  venv
-root@tranescript1:/var/www# source venv/bin/activate
-(venv) root@tranescript1:/var/www# cd interpreter
-(venv) root@tranescript1:/var/www/interpreter# ls
-README.md    interpreter       requirements.txt  setup.py  templates         views.py
-__pycache__  interpreter.sock  server.py         static    test_interpreter
-(venv) root@tranescript1:/var/www/interpreter# ls
-README.md    interpreter       requirements.txt  setup.py  templates         views.py
-__pycache__  interpreter.sock  server.py         static    test_interpreter
-(venv) root@tranescript1:/var/www/interpreter# cd templates/pg
-(venv) root@tranescript1:/var/www/interpreter/templates/pg# ls
-docs.html  index.html
-(venv) root@tranescript1:/var/www/interpreter/templates/pg# vim docs.html
-
+{% block title %}Docs{% endblock %}
+{% block content %}
+<div class="docs-body">
+    <h1><strong>About Tranescript</strong></h1>
+    <hr>
+    <p>
+        Tranescript is a multi purpose scripting language. The goal of the creator was to get recognition from ladies around the world, so for some reason he decided that building an interpreter was the way to go. Using Tranescript in your production environment is not recommended, unless you want to sabotage the company you work for, in which case it is probably your best choice.
+    </p>
+    <p>
     See the
     <a href="https://github.com/jazzyoda5/interpreter">source code</a>
      of the project on github.</p>
